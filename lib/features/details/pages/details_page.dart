@@ -19,7 +19,8 @@ class DetailsPage extends StatelessWidget {
           title: const Text('Can\'t Wait 🤩'),
         ),
         body: BlocProvider(
-          create: (context) => DetailsCubit(ItemsRepository()),
+          create: (context) =>
+              DetailsCubit(ItemsRepository())..getItemWithID(id),
           child: BlocBuilder<DetailsCubit, DetailsState>(
             builder: (context, state) {
               final itemModel = state.itemModel;
@@ -94,7 +95,7 @@ class _ListViewItem extends StatelessWidget {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          itemModel.releaseDate.toString(),
+                          itemModel.releaseDateFormatted(),
                         ),
                       ],
                     ),
