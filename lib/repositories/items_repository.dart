@@ -1,11 +1,17 @@
 import 'package:cantwait28/models/item_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ItemsRepository {
   Stream<List<ItemModel>> getItemsStream() {
+    final userID = FirebaseAuth.instance.currentUser?.uid;
+    if (userID == null) {
+      throw Exception('User is not logged in');
+    }
     return FirebaseFirestore.instance
         .collection('users')
-        .doc('m6Icfg5gGLfOr600tgl8F4fkEvt1')
+        .doc(userID)
+        // hasło Oskaroskar - wnuczek.oskar@gmail.com oraz oskar@gmail.com
         .collection('items')
         .orderBy('release_date')
         .snapshots()
@@ -22,18 +28,26 @@ class ItemsRepository {
   }
 
   Future<void> delete({required String id}) {
+    final userID = FirebaseAuth.instance.currentUser?.uid;
+    if (userID == null) {
+      throw Exception('User is not logged in');
+    }
     return FirebaseFirestore.instance
         .collection('users')
-        .doc('m6Icfg5gGLfOr600tgl8F4fkEvt1')
+        .doc(userID)
         .collection('items')
         .doc(id)
         .delete();
   }
 
   Future<ItemModel> get({required String id}) async {
+    final userID = FirebaseAuth.instance.currentUser?.uid;
+    if (userID == null) {
+      throw Exception('User is not logged in');
+    }
     final doc = await FirebaseFirestore.instance
         .collection('users')
-        .doc('m6Icfg5gGLfOr600tgl8F4fkEvt1')
+        .doc(userID)
         .collection('items')
         .doc(id)
         .get();
@@ -49,9 +63,13 @@ class ItemsRepository {
     String imageURL,
     DateTime releaseDate,
   ) async {
+    final userID = FirebaseAuth.instance.currentUser?.uid;
+    if (userID == null) {
+      throw Exception('User is not logged in');
+    }
     await FirebaseFirestore.instance
         .collection('users')
-        .doc('m6Icfg5gGLfOr600tgl8F4fkEvt1')
+        .doc(userID)
         .collection('items')
         .add(
       {
